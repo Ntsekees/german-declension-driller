@@ -9,6 +9,13 @@ This program can be used to memorize the correct declensions of German determine
 
 The lists of determiners, adjectives and nouns used by the program are hard-coded in the `gdd.py` script. You can add new vocabulary items to those lists if you desire so.
 
+### How to run this program ###
+
+You need Python 3 to run this program.
+```
+python3 gdd.py
+```
+
 ### Output example ###
 
 ```
