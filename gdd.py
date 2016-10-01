@@ -21,19 +21,25 @@ ADJ = {"weiß", "grau", "schwarz", "rot", "grün", "blau", "groß", "klein", "la
 
 # Nouns
 NF = {("Nuss", "Nüsse"), ("Katze", "Katzen"), ("Hand", "Hände"), ("Kralle", "Krallen"),
-         ("Haut", "Häute"), ("Mutter", "Mütter"), ("Pfote", "Pfoten"), ("Wand", "Wände"),
-         ("Flasche", "Flaschen"), ("Fliege", "Fliegen"), ("Schlange", "Schlangen")}
+      ("Haut", "Häute"), ("Mutter", "Mütter"), ("Pfote", "Pfoten"), ("Wand", "Wände"),
+      ("Flasche", "Flaschen"), ("Fliege", "Fliegen"), ("Schlange", "Schlangen")}
 NN = {("Pferd", "Pferde"), ("Wasser", "Wässer"), ("Ei", "Eier"), ("Ohr", "Ohren"),
-         ("Auge", "Augen"), ("Buch", "Bücher"), "Feuer", ("Licht", "Lichter"),
-         ("Haus", "Häuser"), ("Haar", "Haare"), ("Wildschwein", "Wildschweine")}
+      ("Auge", "Augen"), ("Buch", "Bücher"), "Feuer", ("Licht", "Lichter"),
+      ("Haus", "Häuser"), ("Haar", "Haare"), ("Wildschwein", "Wildschweine"),
+      ("Tier", "Tiere"), ("Seil", "Seile")}
 NM = {("Vogel", "Vögel"), ("Freund", "Freunde"), ("Hund", "Hunde"), ("Weg", "Wege"),
-         "Dinosaurier", ("Geist", "Geiste"), ("Zahn", "Zähne"), ("Fuß", "Füße"),
-         ("Apfel", "Äpfel"), ("Baum", "Bäume"), ("Schmetterling", "Schmetterlinge")}
+      "Dinosaurier", ("Geist", "Geiste"), ("Zahn", "Zähne"), ("Fuß", "Füße"),
+      ("Apfel", "Äpfel"), ("Baum", "Bäume"), ("Schmetterling", "Schmetterlinge"),
+      ("Nagel", "Nägel"), ("Teil", "Teile")}
 NM_EN7 = {"Bär", "Drache", "Mensch", "Student"}
+# The NM_EN7 declension class encompasses the masculine nouns with -en ending for
+# all the case/number combinations except nominative singular.
 
 CASES = ("NOM", "ACC", "DAT", "GEN")
 NUMS = ("SG", "PL") # Unused
 
+# Build the plural form of NM_EN7 nouns, which is also the form for singular
+# ACC/DAT/GEN.
 def make_en7_pl(n):
     if n[-1] != 'e':
         n += 'e'
@@ -80,9 +86,6 @@ def decline_art(art, gender, num, case):
         return art
     return art + paradigm[numgen_categ_index(gender, num)][CASES.index(case)]
 
-def numgen_categ_index(gender, number):
-    return ('M', 'N', 'F').index(gender) if number == "SG" else 3
-
 def decline_adj(adj, paradigm, gender, num, case):
     if paradigm == 'S':
         paradigm = STRONG_ADJ_DECL
@@ -93,6 +96,10 @@ def decline_adj(adj, paradigm, gender, num, case):
     if adj[-1] == 'e':
         adj = adj[:-1]
     return adj + paradigm[numgen_categ_index(gender, num)][CASES.index(case)]
+
+# Returns the paradigm index corresponding to the given gender/number combination.
+def numgen_categ_index(gender, number):
+    return ('M', 'N', 'F').index(gender) if number == "SG" else 3
 
 def decline_noun(noun, has_gen, num, case):
     if not isinstance(noun, tuple):
@@ -105,18 +112,20 @@ def decline_noun(noun, has_gen, num, case):
         noun = noun[1]
     assert (isinstance(noun, str) and len(noun) > 0)
     if num == "SG" and case == "GEN" and has_gen:
-        noun = add_gen(noun)
+        noun = add_sg_gen(noun)
     elif num == "PL" and case == "DAT":
         noun = make_pl_dat(noun)
     return noun
 
-def add_gen(n):
+# Adds singular genitive suffix.
+def add_sg_gen(n):
     if n[-1] in {'s', 'ß'}:
         n += "es"
     else:
         n += "s"
     return n
-    
+
+# Adds plural dative suffix.
 def make_pl_dat(n):
     if n[-1] == 'n':
         pass
@@ -130,6 +139,8 @@ def make_pl_dat(n):
 
 def capitalize_first_letter(s):
     return (s[0].upper() + s[1:]) if len(s) > 0 else ""
+
+# MAIN LOOP #
 
 q = False
 while not q:
