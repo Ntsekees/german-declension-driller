@@ -120,7 +120,7 @@ def add_gen(n):
 def make_pl_dat(n):
     if n[-1] == 'n':
         pass
-    elif n[-1] in {'e', 'r'}:
+    elif n[-1] in {'e', 'r', 'l'}:
         n += "n"
     else:
         n += "en"
