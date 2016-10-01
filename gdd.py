@@ -38,7 +38,7 @@ NM_EN7 = {"Bär", "Drache", "Mensch", "Student"}
 CASES = ("NOM", "ACC", "DAT", "GEN")
 NUMS = ("SG", "PL") # Unused
 
-# Build the plural form of NM_EN7 nouns, which is also the form for singular
+# Builds the plural form of NM_EN7 nouns, which is also the form for singular
 # ACC/DAT/GEN.
 def make_en7_pl(n):
     if n[-1] != 'e':
